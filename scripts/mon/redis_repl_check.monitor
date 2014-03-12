@@ -1,0 +1,30 @@
+#!/bin/bash
+CMD="/usr/bin/redis-cli"
+PORT="6379"
+NG_HOST=()
+
+while getopts p: OPT ;do
+    case ${OPT} in
+        p ) PORT="${OPTARG}" ;;
+    esac
+done
+shift `expr $OPTIND - 1`;
+
+for HOST in "$@"
+do
+    LINK=`${CMD} -h ${HOST} -p ${PORT} INFO REPLICATION | grep "master_link_status:" | cut -d":" -f2`
+    ROLE=`${CMD} -h ${HOST} -p ${PORT} INFO REPLICATION | grep "role:" | cut -d":" -f2`
+    if [ "${ROLE}" = $'slave\r' -a "${LINK}" != $'up\r' ];
+    then
+        NG_HOST=(${NG_HOST[@]} "${HOST}")
+    fi
+done
+
+if [ ${#NG_HOST[@]} -ne 0 ];
+then
+    echo "NG_HOST is ${NG_HOST[@]}"
+    exit 1;
+fi
+
+exit 0
+
