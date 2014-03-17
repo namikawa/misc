@@ -13,8 +13,7 @@ shift `expr $OPTIND - 1`;
 for HOST in "$@"
 do
     LINK=`${CMD} -h ${HOST} -p ${PORT} INFO REPLICATION | grep "master_link_status:" | cut -d":" -f2`
-    ROLE=`${CMD} -h ${HOST} -p ${PORT} INFO REPLICATION | grep "role:" | cut -d":" -f2`
-    if [ "${ROLE}" = $'slave\r' -a "${LINK}" != $'up\r' ];
+    if [ "${LINK}" != $'up\r' ];
     then
         NG_HOST=(${NG_HOST[@]} "${HOST}")
     fi
