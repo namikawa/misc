@@ -1,0 +1,16 @@
+server: 192.168.100.100
+
+ssh:
+  user: username
+  user_key: ~/.ssh/id_rsa
+
+mysql:
+  cmd: /usr/bin/mysql
+  user: root
+  db: database_name
+
+osc:
+  cmd: /usr/bin/pt-online-schema-change
+  set_vars: sql_log_bin=0
+  key_block_size:  8
+

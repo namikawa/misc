@@ -1,18 +1,19 @@
 require 'rubygems'
 require 'net/ssh'
+require 'yaml'
 
 ### config
-SERVER = "192.168.100.100"
-SSH_USER = "username"
-SSH_USER_KEY = "~/.ssh/id_rsa"
+config = YAML.load_file("compless_all_tables.yml")
 
-MYSQL_CMD = "/usr/bin/mysql"
-MYSQL_USER = "root"
-MYSQL_DB = "database_name"
-
-OSC_CMD = "/usr/bin/pt-online-schema-change"
-OSC_SET_VARS = "sql_log_bin=0"
-OSC_KEY_BLOCK_SIZE = "8"
+SERVER = config["server"]
+SSH_USER = config["ssh"]["user"]
+SSH_USER_KEY = config["ssh"]["user_key"]
+MYSQL_CMD = config["mysql"]["cmd"]
+MYSQL_USER = config["mysql"]["user"]
+MYSQL_DB = config["mysql"]["db"]
+OSC_CMD = config["osc"]["cmd"]
+OSC_SET_VARS = config["osc"]["set_vars"]
+OSC_KEY_BLOCK_SIZE = config["osc"]["key_block_size"]
 
 ### class
 class AllTableCompresser
@@ -66,6 +67,7 @@ class AllTableCompresser
     # 圧縮対象となるテーブル一覧の取得
     # TODO: コメントアウト外す
     #target_tables =  get_target_tables_by_list(get_sorted_tables())
+    p  get_target_tables_by_list(get_sorted_tables())
 
     # innodb_file_formatをBarracudaに変更
     # TODO: コメントアウト外す
@@ -73,19 +75,21 @@ class AllTableCompresser
     #exec_query("set global innodb_file_format_max='Barracuda';")
 
     # innodb_stats_on_metadataのOFF
-    metadata_mod = false
-    if exec_query("show global variables like 'innodb_stats_on_metadata';").include?("ON")
-      exec_query("set global innodb_stats_on_metadata=OFF;")
-      metadata_mod = true
-    end
+    # TODO: コメントアウト外す
+    #metadata_mod = false
+    #if exec_query("show global variables like 'innodb_stats_on_metadata';").include?("ON")
+    #  exec_query("set global innodb_stats_on_metadata=OFF;")
+    #  metadata_mod = true
+    #end
 
     # TODO: dry-runのチェックどうするか
     # TODO: online-schema-changeの実行
 
     # innodb_stats_on_metadataのON (OFFに変更した場合)
-    if metadata_mod
-      exec_query("set global innodb_stats_on_metadata=ON;")
-    end
+    # TODO: コメントアウト外す
+    #if metadata_mod
+    #  exec_query("set global innodb_stats_on_metadata=ON;")
+    #end
 
   end
 end
