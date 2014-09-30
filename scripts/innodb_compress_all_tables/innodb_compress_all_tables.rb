@@ -3,7 +3,7 @@ require 'net/ssh'
 require 'yaml'
 
 ### config
-config = YAML.load_file("compress_all_tables.yml")
+config = YAML.load_file("innodb_compress_all_tables.yml")
 
 SERVER = config["server"]
 SSH_USER = config["ssh"]["user"]
