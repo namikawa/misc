@@ -3,7 +3,7 @@
 # conf
 FILENAME=/data/testfile
 SIZE=20G
-RUNTIME=16
+RUNTIME=60
 SLEEPTIME=10
 
 # exec
