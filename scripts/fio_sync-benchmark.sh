@@ -7,7 +7,7 @@ RUNTIME=60
 SLEEPTIME=10
 
 # exec
-for NUMJOB in 1 2 4 8 16 32 64 128; do
+for NUMJOB in 1 2 4 8 16 32 64 128 256; do
   echo "----- numjobs=$NUMJOB -----"
   for TYPE in read write randread randwrite; do
   #for TYPE in read write randread randwrite rw randrw; do
