@@ -18,6 +18,7 @@ sudo port clean --all installed
 
 echo "------------------------------ pip-review --auto  ------------------------------"
 sudo pip-review --auto
+#sudo pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | sudo xargs pip install -U
 
 echo "------------------------------ gem update  ------------------------------"
 sudo gem update
