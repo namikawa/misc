@@ -13,6 +13,7 @@ for IODEPTH in 1 2 4 8 16 32 64 128 256; do
     fio -direct=1 -ioengine=libaio -readwrite=$TYPE \
         -filename=$FILENAME -size=$SIZE -runtime=$RUNTIME \
         -bs=4k -iodepth=$IODEPTH -name=file1 | grep "iops="
+    echo 3 > /proc/sys/vm/drop_caches
     sleep $SLEEPTIME
   done
 done
