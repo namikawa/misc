@@ -9,12 +9,12 @@ GCS_BACKET_NAME="namikawa-test"
 SPLIT_FILE_SIZE="1G"
 
 # download speed of pg_dump (KB/s)
-D_SPEED="5000"
+D_SPEED="4096"
 # upload speed to Google Cloud Storage (KB/s)
-U_SPEED="1000"
+U_SPEED="1024"
 
-### require
-# - Google Cloud SDK (gsutil)
+### require tools
+# - Google Cloud SDK (gsutil) and setup (ex. gcloud init)
 # - Bandwidth shaper tool (trickle)
 # - Split a file (split)
 hash gsutil && hash trickle && hash split
@@ -24,7 +24,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-### arg & check
+### check argument
 usage() {
   echo "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION]"
   exit 1
@@ -66,6 +66,7 @@ if [ -e ${BACKUP_DIR} ]; then
 fi
 
 mkdir -p ${BACKUP_DIR}
+exit_check
 
 # backup database
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start pg_dump."
