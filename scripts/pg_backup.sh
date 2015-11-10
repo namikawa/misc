@@ -4,8 +4,8 @@
 SSH_USER="postgres"
 PG_USER="postgres"
 
-BACKUP_BASE_DIR="/backup"
-GCS_BACKET_NAME="namikawa-test"
+BACKUP_BASE_DIR="/backup/postgresql"
+GCS_BACKET_NAME="example_bucket_name"
 SPLIT_FILE_SIZE="1G"
 
 # download speed of pg_dump (KB/s)
