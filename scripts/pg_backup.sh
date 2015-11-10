@@ -57,7 +57,7 @@ exit_check() {
 
 # make backup directory
 DATE=`date +"%Y%m%d_%k%M%S"`
-BACKUP_DIR="${BACKUP_BASE_DIR}/${DATABASE}/${DATE}"
+BACKUP_DIR="${BACKUP_BASE_DIR}/${HOST_ADDRESS}/${DATABASE}/${DATE}"
 DUMP_FILE="${BACKUP_DIR}/${DATE}_${DATABASE}.dump"
 
 if [ -e ${BACKUP_DIR} ]; then
@@ -81,7 +81,7 @@ rm -f ${DUMP_FILE}
 
 # upload backup file
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start uploading."
-trickle -s -u ${U_SPEED} gsutil -m rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/${DATABASE}/${DATE}/
+trickle -s -u ${U_SPEED} gsutil -m rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/i${HOST_ADDRESS}/${DATABASE}/${DATE}/
 exit_check
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished uploading."
 
@@ -89,7 +89,7 @@ echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished uploading."
 rm -rf ${BACKUP_DIR}
 
 # manage backup generation
-BACKUP_PATHS=`gsutil ls gs://${GCS_BACKET_NAME}/${DATABASE}/ | sort -k5 -r`
+BACKUP_PATHS=`gsutil ls gs://${GCS_BACKET_NAME}/${HOST_ADDRESS}/${DATABASE}/ | sort -k5 -r`
 COUNT=1
 
 for BACKUP_PATH in ${BACKUP_PATHS}; do
