@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Thanks for https://github.com/mikeda/tools/blob/master/logtail.pl
+
+TARGET="/var/log/nginx/*-access.log"
+TMPDIR="/tmp/munin_nginx-server-error-count"
+LOGTAIL="/usr/local/bin/logtail.pl"
+
+declare -a status_desc
+status_desc[500]='Internal Server Error'
+status_desc[501]='Not Implemented'
+status_desc[502]='Bad Gateway'
+status_desc[503]='Service Unavailable'
+status_desc[504]='Gateway Timeout'
+status_desc[505]='HTTP Version Not Supported'
+status_desc[506]='Variant Also Negotiates'
+status_desc[507]='Insufficient Storage'
+status_desc[508]='Loop Detected'
+status_desc[509]='Bandwidth Limit Exceeded'
+status_desc[510]='Not Extended'
+status_desc[511]='Network Authentication Required'
+
+### autoconf
+if [ "$1" = "autoconf" ]; then
+  echo yes
+  exit 0
+fi
+
+### config
+if [ "$1" = "config" ]; then
+  echo "graph_title Nginx server-error count (Multiple log file)"
+  echo "graph_category nginx"
+  echo "graph_info This graph shows nginx server error (5xx) amount per 5 minutes"
+  echo "graph_scale no"
+  echo "graph_vlabel Error count / 5 minutes"
+  for s in ${!status_desc[@]}; do
+    echo "err${s}.label ${s} ${status_desc[${s}]}"
+    echo "err${s}.min 0"
+    echo "err${s}.draw LINE2"
+    echo "err${s}.type GAUGE"
+  done
+  exit 0
+fi
+
+###
+mkdir -p ${TMPDIR}
+
+declare -a code
+for s in ${!status_desc[@]}; do
+  code[${s}]=0
+done
+
+for file in ${TARGET}; do
+  while read line
+  do
+    status=`echo ${line} | awk '{print $2}'`
+    count=`echo ${line} | awk '{print $1}'`
+
+    expr ${status} + 1 >/dev/null 2>&1
+    if [ $? -lt 2 ]; then
+      code[${status}]=`expr ${code[${status}]} + ${count}`
+    fi
+  done < <(${LOGTAIL} "${file}" -r "${file}.1" -o "${TMPDIR}/`basename ${file}`.offset" 2> /dev/null | awk '{print $9}' | sort | uniq -c)
+done
+
+for s in ${!status_desc[@]}; do
+  echo "err${s}.value ${code[${s}]}"
+done
+
