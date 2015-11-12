@@ -6,7 +6,7 @@ PG_USER="postgres"
 
 BACKUP_BASE_DIR="/backup/postgresql"
 GCS_BACKET_NAME="example_bucket_name"
-SPLIT_FILE_SIZE="1G"
+SPLIT_FILE_SIZE="1073741824"
 
 # download speed of pg_dump (KB/s)
 D_SPEED="4096"
@@ -76,9 +76,11 @@ exit_check
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished pg_dump."
 
 # split dump file
-split -b ${SPLIT_FILE_SIZE} -a 4 -d ${DUMP_FILE} ${DUMP_FILE}.
-exit_check
-rm -f ${DUMP_FILE}
+if [ `wc -c ${DUMP_FILE} | awk '{print $1}'` -gt ${SPLIT_FILE_SIZE} ]; then
+  split -b ${SPLIT_FILE_SIZE} -a 4 -d ${DUMP_FILE} ${DUMP_FILE}.
+  exit_check
+  rm -f ${DUMP_FILE}
+fi
 
 # upload backup file
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start uploading."
