@@ -1,0 +1,4 @@
+[httpd_server_error_count_for_multilog]
+env.logfile /var/log/nginx/*-access.log
+env.cat nginx
+
