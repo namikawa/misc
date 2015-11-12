@@ -70,6 +70,7 @@ exit_check
 
 # backup database
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start pg_dump."
+trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dumpall -g" > "${BACKUP_DIR}/${DATE}_cluster.dump"
 trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dump -Fc -U ${PG_USER} ${DATABASE}" > ${DUMP_FILE}
 exit_check
 echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished pg_dump."
