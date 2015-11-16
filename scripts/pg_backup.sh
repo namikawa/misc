@@ -50,13 +50,15 @@ shift $((${OPTIND} - 1))
 ### exec
 exit_check() {
   if [ $? -ne 0 ]; then
-    echo "[`date +"%Y/%m/%d %k:%M:%S"`] ERROR: abort." 1>&2
+    echo "[`date +"%Y/%m/%d %H:%M:%S"`] ERROR: abort." 1>&2
     exit 1
   fi
 }
 
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: Start backup for ${DATABASE} DB."
+
 # make backup directory
-DATE=`date +"%Y%m%d_%k%M%S"`
+DATE=`date +"%Y%m%d_%H%M%S"`
 BACKUP_DIR="${BACKUP_BASE_DIR}/${HOST_ADDRESS}/${DATABASE}/${DATE}"
 DUMP_FILE="${BACKUP_DIR}/${DATE}_${DATABASE}.dump"
 
@@ -69,11 +71,11 @@ mkdir -p ${BACKUP_DIR}
 exit_check
 
 # backup database
-echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start pg_dump."
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: start pg_dump."
 trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dumpall -g" > "${BACKUP_DIR}/${DATE}_cluster.dump"
 trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dump -Fc -U ${PG_USER} ${DATABASE}" > ${DUMP_FILE}
 exit_check
-echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished pg_dump."
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: finished pg_dump."
 
 # split dump file
 if [ `wc -c ${DUMP_FILE} | awk '{print $1}'` -gt ${SPLIT_FILE_SIZE} ]; then
@@ -83,10 +85,10 @@ if [ `wc -c ${DUMP_FILE} | awk '{print $1}'` -gt ${SPLIT_FILE_SIZE} ]; then
 fi
 
 # upload backup file
-echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: start uploading."
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: start uploading."
 trickle -s -u ${U_SPEED} gsutil -m rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/i${HOST_ADDRESS}/${DATABASE}/${DATE}/
 exit_check
-echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: finished uploading."
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: finished uploading."
 
 # delete backup directory
 rm -rf ${BACKUP_DIR}
@@ -98,13 +100,15 @@ COUNT=1
 for BACKUP_PATH in ${BACKUP_PATHS}; do
   if [ ${COUNT} -le ${GENERATION} ]; then
     # N/A
-    echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: keeping - ${BACKUP_PATH}"
+    echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: keeping - ${BACKUP_PATH}"
   else
     # delete
     gsutil -m rm -r ${BACKUP_PATH}
     exit_check
-    echo "[`date +"%Y/%m/%d %k:%M:%S"`] INFO: deleting - ${BACKUP_PATH}"
+    echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: deleting - ${BACKUP_PATH}"
   fi
   COUNT=`expr ${COUNT} + 1`
 done
+
+echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: Finished."
 
