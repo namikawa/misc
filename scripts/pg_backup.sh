@@ -26,7 +26,7 @@ fi
 
 ### check argument
 usage() {
-  echo "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION]"
+  echo "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION]" 1>&2
   exit 1
 }
 
