@@ -8,11 +8,6 @@ BACKUP_BASE_DIR="/backup/postgresql"
 GCS_BACKET_NAME="example_bucket_name"
 SPLIT_FILE_SIZE="1073741824"
 
-# download speed of pg_dump (KB/s)
-D_SPEED="4096"
-# upload speed to Google Cloud Storage (KB/s)
-U_SPEED="1024"
-
 ### common
 log_info() {
   echo "[`date +"%Y/%m/%d %H:%M:%S"`] INFO: $1"
@@ -35,11 +30,10 @@ fi
 
 ### check argument
 usage() {
-  log_err "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION]"
-  exit 1
+  echo "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION] -D (DOWNLOAD_SPEED) -U (UPLOAD_SPEED)"
 }
 
-while getopts ':d:g:h:' OPT
+while getopts ':d:g:h:D:U:' OPT
 do
   case ${OPT} in
     d)  DATABASE=${OPTARG}
@@ -48,13 +42,25 @@ do
         ;;
     h)  HOST_ADDRESS=${OPTARG}
         ;;
-    :|\?) usage
+    D)  D_SPEED=${OPTARG}
+        ;;
+    U)  U_SPEED=${OPTARG}
+        ;;
+    :|\?) usage && exit 0
         ;;
   esac
 done
 shift $((${OPTIND} - 1))
 
-([ -z "${DATABASE}" ] || [ -z "${GENERATION}" ] || [ -z "${HOST_ADDRESS}" ]) && usage
+([ -z "${DATABASE}" ] || [ -z "${GENERATION}" ] || [ -z "${HOST_ADDRESS}" ]) && usage && exit 1
+
+# default parameters
+if [ -z ${D_SPEED} ]; then
+  D_SPEED="1048576"
+fi
+if [ -z ${U_SPEED} ]; then
+  U_SPEED="1048576"
+fi
 
 ### exec
 exit_check() {
