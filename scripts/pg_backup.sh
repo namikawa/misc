@@ -31,6 +31,12 @@ fi
 ### check argument
 usage() {
   echo "Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION] -D (DOWNLOAD_SPEED) -U (UPLOAD_SPEED)"
+  echo ""
+  echo "  * -h    [require] Target database host address."
+  echo "  * -d    [require] Target database schema name."
+  echo "  * -g    [require] Backup generation count."
+  echo "  * -D    Download speed of pg_dump. (KB/s) - Default: 1GB/s"
+  echo "  * -U    Upload speed to Google Cloud Storage. (KB/s) - Default: 1GB/s"
 }
 
 while getopts ':d:g:h:D:U:' OPT
