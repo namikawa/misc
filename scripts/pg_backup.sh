@@ -93,8 +93,8 @@ exit_check
 
 # backup database
 log_info "start pg_dump."
-trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dumpall -g" > "${BACKUP_DIR}/${DATE}_cluster.dump"
-trickle -s -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dump -Fc -U ${PG_USER} ${DATABASE}" > ${DUMP_FILE}
+trickle -s -t 1 -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dumpall -g" > "${BACKUP_DIR}/${DATE}_cluster.dump"
+trickle -s -t 1 -d ${D_SPEED} ssh ${SSH_USER}@${HOST_ADDRESS} "pg_dump -Fc -U ${PG_USER} ${DATABASE}" > ${DUMP_FILE}
 exit_check
 log_info "finished pg_dump."
 
@@ -107,7 +107,7 @@ fi
 
 # upload backup file
 log_info "start uploading."
-trickle -s -u ${U_SPEED} gsutil rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/${HOST_ADDRESS}/${DATABASE}/${DATE}/
+trickle -s -t 1 -u ${U_SPEED} gsutil rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/${HOST_ADDRESS}/${DATABASE}/${DATE}/
 exit_check
 log_info "finished uploading."
 
