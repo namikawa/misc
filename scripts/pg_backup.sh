@@ -31,13 +31,13 @@ fi
 ### check argument
 usage() {
 cat << EOS
-Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION] -D (DOWNLOAD_SPEED) -U (UPLOAD_SPEED)"
+Usage: $ ${0} -h [HOST_ADDDRESS] -d [DATABASE_NAME] -g [GENERATION] -D (DOWNLOAD_SPEED) -U (UPLOAD_SPEED)
 
-  * -h    [require] Target database host address."
-  * -d    [require] Target database schema name."
-  * -g    [require] Backup generation count."
-  * -D    Download speed of pg_dump. (KB/s) - Default: 1GB/s"
-  * -U    Upload speed to Google Cloud Storage. (KB/s) - Default: 1GB/s"
+  * -h    [require] Target database host address.
+  * -d    [require] Target database schema name.
+  * -g    [require] Backup generation count.
+  * -D    Download speed of pg_dump. (KB/s) - Default: 1GB/s
+  * -U    Upload speed to Google Cloud Storage. (KB/s) - Default: 1GB/s
 EOS
 }
 
