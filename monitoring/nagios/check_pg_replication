@@ -1,0 +1,81 @@
+#!/bin/bash
+
+# config
+PSQL="/usr/local/bin/psql"
+PG_USER="postgres"
+
+# exit code
+OK=0
+WARNING=1
+CRITICAL=2
+UNKNOWN=3
+
+# check args
+usage() {
+cat << EOS
+Usage: $ ${0} -m [MASTER_ADDDRESS] -s [SLAVE_ADDRESS1],[SLAVE_ADDRESS2]...
+
+  * -m    [require] Target master database host address.
+  * -s    [require] Target slave databases host address. (comma-separated)
+EOS
+}
+
+while getopts ':m:s:' OPT
+do
+  case ${OPT} in
+    m)  MASTER=${OPTARG}
+        ;;
+    s)  SLAVES=${OPTARG}
+        ;;
+    :|\?) usage && exit 0
+        ;;
+  esac
+done
+shift $((${OPTIND} - 1))
+
+([ -z "${MASTER}" ] || [ -z "${SLAVES}" ]) && usage && exit 1
+
+# get replication server list
+DB_RES=`${PSQL} -q -t -A -h ${MASTER} -U ${PG_USER} -c "SELECT client_addr FROM pg_stat_replication"`
+DB_COUNT=`${PSQL} -q -t -A -h ${MASTER} -U ${PG_USER} -c "SELECT count(*) FROM pg_stat_replication"`
+
+# create array for input slave servers
+SLAVES_ARR=( `echo ${SLAVES} | tr -s ',' ' '`)
+
+# matching slave counts
+status=${OK}
+
+if [ ${DB_COUNT} -ne ${#SLAVES_ARR[@]} ]; then
+  echo "[ERROR] Replication server count is mismatch."
+  status=${CRITICAL}
+fi
+
+# matching slave addresses
+count=0
+for op_addr in ${SLAVES_ARR[@]}; do
+  ok=0
+
+  for db_addr in ${DB_RES}; do
+    if [ ${db_addr} = ${op_addr} ]; then
+      count=`expr ${count} + 1`
+      echo "OK: ${op_addr}"
+      ok=1
+    fi 
+  done
+
+  if [ ${ok} -eq 0 ]; then
+    echo "NG: ${op_addr}"
+    status=${CRITICAL}
+  fi
+done
+
+
+case ${status} in
+  0)  exit ${OK} ;;
+  1)  exit ${WARNING} ;;
+  2)  exit ${CRITICAL} ;;
+  3)  exit ${UNKNOWN} ;;
+  *)  echo "** FATAL ERRROR **"
+      exit ${UNKNOWN} ;;
+esac
+
