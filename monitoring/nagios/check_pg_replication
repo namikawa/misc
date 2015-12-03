@@ -37,6 +37,11 @@ shift $((${OPTIND} - 1))
 
 # get replication server list
 DB_RES=`${PSQL} -q -t -A -h ${MASTER} -U ${PG_USER} -c "SELECT client_addr FROM pg_stat_replication"`
+if [ $? -ne 0 ]; then
+  echo "[EROOR] postgresql server connection is error." 1>&2
+  exit ${UNKNOWN}
+fi
+
 DB_COUNT=`${PSQL} -q -t -A -h ${MASTER} -U ${PG_USER} -c "SELECT count(*) FROM pg_stat_replication"`
 
 # create array for input slave servers
@@ -46,7 +51,7 @@ SLAVES_ARR=( `echo ${SLAVES} | tr -s ',' ' '`)
 status=${OK}
 
 if [ ${DB_COUNT} -ne ${#SLAVES_ARR[@]} ]; then
-  echo "[ERROR] Replication server count is mismatch."
+  echo "[ERROR] Replication server count is mismatch." 1>&2
   status=${CRITICAL}
 fi
 
