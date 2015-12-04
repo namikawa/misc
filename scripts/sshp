@@ -1,0 +1,13 @@
+#!/bin/bash
+ 
+HOST=$1
+source ./pass.conf
+ 
+expect -c "
+set timeout 30
+spawn ssh ${USER}@${HOST}
+expect \"${USER}@${HOST}'s password\"; send \"${PASS}\n\"
+ 
+interact
+"
+

@@ -1,0 +1,13 @@
+#!/bin/bash
+ 
+HOST=$1
+source ./pass.conf
+ 
+expect -c "
+set timeout 30
+spawn ssh -t ${USER}@${HOST} \"sh -c 'LANG=c sudo -k -p password: su -'\"
+expect \"${USER}@${HOST}'s password\"; send \"${PASS}\n\"
+expect \"password:\"; send \"${PASS}\n\"
+interact
+"
+
