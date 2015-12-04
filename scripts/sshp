@@ -1,7 +1,7 @@
 #!/bin/bash
  
 HOST=$1
-source ./pass.conf
+source ~/.ssh/pass.conf
  
 expect -c "
 set timeout 30
