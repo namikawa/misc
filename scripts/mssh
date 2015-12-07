@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ -n "${SESSION_NAME}" ]; then
+  session=${SESSION_NAME}
+else
+  session=mssh-`date +%s`
+fi
+window=mssh
+
+### create tmux session
+tmux new-session -d -n ${window} -s ${session}
+ 
+### ssh login
+# firsh, ssh login
+tmux send-keys "ssh ${1}" C-m
+shift
+
+# create pane & ssh login
+for i in ${*};do
+  tmux split-window
+  tmux select-layout tiled
+  tmux send-keys "ssh ${i}" C-m
+done
+
+### select pane first login
+tmux select-pane -t 0
+
+### synchronize mode
+tmux set-window-option synchronize-panes on
+
+### attach session
+tmux attach-session -t ${session}
+
