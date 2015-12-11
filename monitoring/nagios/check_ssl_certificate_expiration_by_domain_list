@@ -1,6 +1,7 @@
 #!/bin/bash
 
-CHECK_HTTP="/usr/local/Cellar/nagios-plugins/2.0.3/sbin/check_http"
+#CHECK_HTTP="/usr/local/Cellar/nagios-plugins/2.0.3/sbin/check_http"
+CHECK_HTTP="/usr/lib/nagios/plugins/check_http"
 
 ### check args
 usage() {
