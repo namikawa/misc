@@ -1,0 +1,50 @@
+#!/bin/bash
+
+CHECK_HTTP="/usr/local/Cellar/nagios-plugins/2.0.3/sbin/check_http"
+
+### check args
+usage() {
+cat << EOS
+Usage: $ ${0} [CONFIG_FILE]
+EOS
+}
+
+[ -z "${1}" ] && usage && exit 3
+
+CONFIG_FILE=${1}
+
+if [ -e ${CONFIG_FILE} ]; then
+  source ${CONFIG_FILE}
+else
+  echo "[ERROR] Config file is not found." 2>&1
+  exit 3
+fi
+
+### exec
+status=0
+err_list=()
+
+for domain in ${DOMAIN_LISTS[@]}; do
+  ${CHECK_HTTP} --sni -H ${domain} -C ${SSL_WARN},${SSL_CRIT}
+  exitcode=${?}
+
+  if [ ${exitcode} -ne 0 ]; then
+    err_list+=(${domain})
+    if [ ${exitcode} -gt ${status} ]; then
+      status=${exitcode}
+    fi
+  fi
+done
+
+if [ ${status} -eq 0 ]; then
+  echo "***** ALL DOMAIN PASSED *****"
+else
+  echo "***** ERROR DOAMIN LIST *****" 2>&1
+  for domain in ${err_list[@]}; do
+    echo ${domain} 2>&1
+  done
+  echo "*****************************" 2>&1
+fi
+
+exit ${status}
+
