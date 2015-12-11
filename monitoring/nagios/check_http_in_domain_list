@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# require check_http (nagios-plugins)
+#CHECK_HTTP="/usr/local/Cellar/nagios-plugins/2.0.3/sbin/check_http"
+CHECK_HTTP="/usr/lib/nagios/plugins/check_http"
+
+### check args
+usage() {
+cat << EOS
+Usage: $ ${0} [CONFIG_FILE]
+EOS
+}
+
+[ -z "${1}" ] && usage && exit 3
+
+CONFIG_FILE=${1}
+
+if [ -e ${CONFIG_FILE} ]; then
+  source ${CONFIG_FILE}
+else
+  echo "[ERROR] Config file is not found." 2>&1
+  exit 3
+fi
+
+if [ -z ${HOST_ADDRESS} ]; then
+  HOST_DISABLE="On"
+fi
+
+### exec
+status=0
+err_list=()
+
+for domain in ${DOMAIN_LISTS[@]}; do
+  if [ ${HOST_DISABLE} = "On" ]; then
+    HOST_ADDRESS=${domain}
+  fi
+
+  echo -n "${domain} -> "
+  if [ ${SSL} = "On" ]; then
+    ${CHECK_HTTP} --ssl -H ${HOST_ADDRESS} -u https://${domain}/
+  else
+    ${CHECK_HTTP} -H ${HOST_ADDRESS} -u http://${domain}/
+  fi
+
+  if [ ${?} -ne 0 ]; then
+    err_list+=(${domain})
+    status=2
+  fi
+done
+
+if [ ${status} -eq 0 ]; then
+  echo "***** ALL DOMAIN PASSED *****"
+else
+  echo "***** ERROR DOMAIN LIST *****" 2>&1
+  for domain in ${err_list[@]}; do
+    echo ${domain} 2>&1
+  done
+  echo "*****************************" 2>&1
+fi
+
+exit ${status}
+
