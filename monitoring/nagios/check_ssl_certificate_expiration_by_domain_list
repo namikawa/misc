@@ -21,12 +21,20 @@ else
   exit 3
 fi
 
+if [ -z ${HOST_ADDRESS} ]; then
+  HOST_DISABLE="On"
+fi
+
 ### exec
 status=0
 err_list=()
 
 for domain in ${DOMAIN_LISTS[@]}; do
-  ${CHECK_HTTP} --sni -H ${domain} -C ${SSL_WARN},${SSL_CRIT}
+  if [ "${HOST_DISABLE}" = "On" ]; then
+    HOST_ADDRESS=${domain}
+  fi
+
+  ${CHECK_HTTP} --sni -H ${domain} -I ${HOST_ADDRESS} -C ${SSL_LIMIT}
   exitcode=${?}
 
   if [ ${exitcode} -ne 0 ]; then
