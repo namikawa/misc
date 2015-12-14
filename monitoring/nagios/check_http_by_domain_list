@@ -31,7 +31,7 @@ status=0
 err_list=()
 
 for domain in ${DOMAIN_LISTS[@]}; do
-  if [ ${HOST_DISABLE} = "On" ]; then
+  if [ "${HOST_DISABLE}" = "On" ]; then
     HOST_ADDRESS=${domain}
   fi
 
