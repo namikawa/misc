@@ -34,8 +34,9 @@ for domain in ${DOMAIN_LISTS[@]}; do
     HOST_ADDRESS=${domain}
   fi
 
-  ${CHECK_HTTP} --sni -H ${domain} -I ${HOST_ADDRESS} -C ${SSL_LIMIT}
+  RES=`${CHECK_HTTP} --sni -H ${domain} -I ${HOST_ADDRESS} -C ${SSL_LIMIT}`
   exitcode=${?}
+  echo "${RES} - [${domain}]"
 
   if [ ${exitcode} -ne 0 ]; then
     err_list+=(${domain})
