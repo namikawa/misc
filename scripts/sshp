@@ -1,8 +1,16 @@
 #!/bin/bash
  
 HOST=$1
+CHECK=~/bin/ip_check.sh
+RESOLV="gk2"
 source ~/.ssh/pass.conf
- 
+
+${CHECK} ${HOST} > /dev/null
+if [ $? -ne 0 ]; then
+  RES=`ssh ${RESOLV} "host ${HOST}"`
+  HOST=`echo ${RES} | awk '{print $4}'`
+fi
+
 expect -c "
 set timeout 30
 spawn ssh ${USER}@${HOST}
