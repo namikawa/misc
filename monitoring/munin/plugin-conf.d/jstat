@@ -1,0 +1,5 @@
+[jstat_*]
+env.pidfilepath /var/run/jetty.pid
+env.javahome /usr/local/java
+env.username jetty
+
