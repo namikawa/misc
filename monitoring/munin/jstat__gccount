@@ -47,7 +47,7 @@ if [ -z "${pidfilepath}" ]; then
   pidfilepath="${DefaultPidFile}"
 fi
 
-if [ -z "${pidfilepath}" ]; then
+if [ -z "${username}" ]; then
   username="${DefaultUserName}"
 fi
 
