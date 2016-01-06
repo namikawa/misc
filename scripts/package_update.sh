@@ -18,8 +18,8 @@ sudo easy_install -U pip
 echo "------------------------------ pip install -U *** ------------------------------"
 sudo -H pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | grep -v "pyobjc-framework-Message" | sudo -H xargs pip install -U
 
-#echo "------------------------------ gem update  ------------------------------"
-#sudo gem update
+echo "------------------------------ gem update  ------------------------------"
+sudo gem update
 
 echo "========== END =========="
 
