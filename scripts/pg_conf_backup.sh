@@ -109,7 +109,7 @@ for dir in ${TARGET_DIRS[@]}; do
     cd ${BACKUP_DIR}
     tar czf ${BACKUP_DIR}/${file}.tar.gz `basename ${dir}`
     exit_check
-    cd -
+    cd - > /dev/null
 
     rm -rf ${BACKUP_DIR}/`basename ${dir}`
   fi
