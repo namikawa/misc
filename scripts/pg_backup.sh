@@ -109,7 +109,7 @@ fi
 
 # upload backup file
 log_info "start uploading."
-trickle -s -t 1 -u ${U_SPEED} gsutil rsync -r  ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/${HOST_ADDRESS}/${DATABASE}/${DATE}/
+trickle -s -t 1 -u ${U_SPEED} gsutil rsync -r ${BACKUP_DIR} gs://${GCS_BACKET_NAME}/${HOST_ADDRESS}/${DATABASE}/${DATE}/
 exit_check
 log_info "finished uploading."
 
