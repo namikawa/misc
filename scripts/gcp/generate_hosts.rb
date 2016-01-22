@@ -2,7 +2,7 @@
 
 require 'json'
 
-GCLOUD = "/opt/google-cloud-sdk/bin/gcloud"
+GCLOUD = "/usr/bin/gcloud"
 
 project_opt = ""
 unless ARGV[0].nil? then
