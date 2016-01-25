@@ -11,7 +11,7 @@ window=mssh
 tmux new-session -d -n ${window} -s ${session}
  
 ### ssh login
-# firsh, ssh login
+# first, ssh login
 tmux send-keys "ssh ${1}" C-m
 shift
 
