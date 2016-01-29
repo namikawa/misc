@@ -22,9 +22,9 @@ result.each do |instance|
   end
 
   unless ipaddr.nil? then
-    puts "#{ipaddr}  #{instance['name']}"
+    puts "#{ipaddr}  #{instance['name']} #{instance['name']}.c.#{ARGV[0]}.internal"
   else
-    puts "# [external-ip is none] #{instance['name']} "
+    puts "# [external-ip is none] #{instance['name']} #{instance['name']}.c.#{ARGV[0]}.internal"
   end
 end
 
