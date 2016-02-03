@@ -1,10 +1,21 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby2.0
 
 require 'net/http'
 require 'uri'
 require 'pit'
 require 'json'
 
+class Net::HTTP
+  def initialize_new(address, port = nil)
+    initialize_old(address, port)
+    @open_timeout = 10
+    @read_timeout = 10
+  end
+  alias :initialize_old :initialize
+  alias :initialize :initialize_new
+end
+
+##### Exec
 config = Pit.get('cdh-mgr')
 uri = URI.parse(config['target'])
 
