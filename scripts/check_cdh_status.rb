@@ -19,5 +19,6 @@ if res.code == '200'
   STDOUT.puts result['entityStatus']
 else
   STDERR.puts "[ERROR] (#{res.code}) #{res.message}"
+  exit!(1)
 end
 
