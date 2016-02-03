@@ -5,10 +5,8 @@ require 'uri'
 require 'pit'
 require 'json'
 
-TARGET = "http://cdh-mgr:7180/api/v11/clusters/cluster/"
-
-uri = URI.parse(TARGET)
 config = Pit.get('cdh-mgr')
+uri = URI.parse(config['target'])
 
 req = Net::HTTP::Get.new(uri.path)
 req.basic_auth(config['username'], config['password'])
