@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby2.0
+#!/usr/bin/env ruby
 
 require 'net/http'
 require 'uri'
@@ -17,7 +17,7 @@ end
 
 ##### Exec
 config = Pit.get('cdh-mgr')
-uri = URI.parse(config['target'])
+uri = URI.parse(config['cluster_target'])
 
 req = Net::HTTP::Get.new(uri.path)
 req.basic_auth(config['username'], config['password'])
