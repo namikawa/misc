@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [ -n "${SESSION_NAME}" ]; then
+  session=${SESSION_NAME}
+else
+  session=mtelnet-`date +%s`
+fi
+window=mtelnet
+
+### create tmux session
+tmux new-session -d -n ${window} -s ${session}
+ 
+### telnet login
+# first, telnet login
+tmux send-keys "telnet ${1}" C-m
+shift
+
+# create pane & telnet login
+for i in ${*};do
+  tmux split-window
+  tmux select-layout tiled
+  tmux send-keys "telnet ${i}" C-m
+done
+
+### select pane first login
+tmux select-pane -t 0
+
+### synchronize mode
+tmux set-window-option synchronize-panes on
+
+### attach session
+tmux attach-session -t ${session}
+
