@@ -1,5 +1,5 @@
 #!/bin/bash
- 
+
 HOST=$1
 CHECK=~/bin/ip_check.sh
 RESOLV="gk2"
@@ -8,6 +8,10 @@ source ~/.ssh/pass.conf
 ${CHECK} ${HOST} > /dev/null
 if [ $? -ne 0 ]; then
   RES=`ssh ${RESOLV} "host ${HOST}"`
+  if [ $? -ne 0 ]; then
+    echo "[ERROR] invalid hostname."
+    exit 1
+  fi
   HOST=`echo ${RES} | awk '{print $4}'`
 fi
 
