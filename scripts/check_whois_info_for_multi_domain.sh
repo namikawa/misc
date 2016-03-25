@@ -3,7 +3,7 @@
 ### config
 FILTER="Registrant Email: "
 
-source ./domains.sh
+source ./domains6.sh
 
 ### Exec
 
