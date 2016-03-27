@@ -16,7 +16,7 @@ if [ $? -ne 0 ]; then
 fi
 
 expect -c "
-set timeout 30
+set timeout 10
 spawn ssh ${USER}@${HOST}
 expect \"${USER}@${HOST}'s password\"; send \"${PASS}\n\"
  
