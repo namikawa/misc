@@ -27,7 +27,7 @@ time = Time.now.strftime("%Y%m%d-%H%M%S")
 list_res.each do |disk|
   if disks.empty? and snapshots.empty? then
     disks = disk['name']
-    snapshots = disk['name'] + "-" + time
+    snapshots = disk['name'] + "-" + time + "--autobak"
   else
     disks += " " + disk['name']
     snapshots += "," + disk['name'] + "-" + time + "--autobak"
