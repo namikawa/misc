@@ -15,6 +15,11 @@ end
 
 list_res = JSON.parse(`#{GCLOUD} compute disks list #{project_opt} --format=json`)
 
+if list_res.empty? then
+  STDERR.puts "[ERROR] not get disks list."
+  exit!(1)
+end
+
 disks = ""
 snapshots = ""
 time = Time.now.strftime("%Y%m%d-%H%M%S")
@@ -28,6 +33,12 @@ list_res.each do |disk|
     snapshots += "," + disk['name'] + "-" + time
   end
 end
+
+if disks.empty? or snapshots.empty? then
+  STDERR.puts "[ERROR] no target disks for snapshot."
+  exit!(1)
+end
+
 puts "--- Target Disks   : " + disks
 puts "--- Snapshot Names : " + snapshots
 
