@@ -30,7 +30,7 @@ list_res.each do |disk|
     snapshots = disk['name'] + "-" + time
   else
     disks += " " + disk['name']
-    snapshots += "," + disk['name'] + "-" + time
+    snapshots += "," + disk['name'] + "-" + time + "--autobak"
   end
 end
 
