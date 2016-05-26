@@ -2,6 +2,7 @@
 
 #CHECK_HTTP="/usr/local/Cellar/nagios-plugins/2.0.3/sbin/check_http"
 CHECK_HTTP="/usr/lib/nagios/plugins/check_http"
+IFS=$'\n'
 
 ### check args
 usage() {
@@ -28,6 +29,7 @@ fi
 ### exec
 status=0
 err_list=()
+ng=0
 
 for domain in ${DOMAIN_LISTS[@]}; do
   if [ "${HOST_DISABLE}" = "On" ]; then
@@ -39,17 +41,20 @@ for domain in ${DOMAIN_LISTS[@]}; do
   echo "${RES} - [${domain}]"
 
   if [ ${exitcode} -ne 0 ]; then
-    err_list+=(${domain})
+    err_list+=(${RES})
+    ng=$(( ng + 1 ))
     if [ ${exitcode} -gt ${status} ]; then
       status=${exitcode}
     fi
   fi
 done
 
+echo ""
 if [ ${status} -eq 0 ]; then
   echo "***** ALL DOMAIN PASSED *****"
 else
   echo "***** ERROR DOAMIN LIST *****" 2>&1
+  echo "[ TOTAL: ${ng} ]" 2>&1
   for domain in ${err_list[@]}; do
     echo ${domain} 2>&1
   done
