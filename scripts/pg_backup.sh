@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -u
 
 ### config
 SSH_USER="postgres"
