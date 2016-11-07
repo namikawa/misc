@@ -13,10 +13,10 @@ brew upgrade
 echo "------------------------------ pip install --upgrade pip ------------------------------"
 pip install --upgrade pip
 
-#echo "------------------------------ pip-review --auto  ------------------------------"
-#sudo -H pip-review --auto
-echo "------------------------------ pip install -U *** ------------------------------"
-pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs pip install -U
+echo "------------------------------ pip-review --auto  ------------------------------"
+pip-review --auto
+#echo "------------------------------ pip install -U *** ------------------------------"
+#pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs pip install -U
 
 echo "------------------------------ gem update  ------------------------------"
 sudo gem update
