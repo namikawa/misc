@@ -15,7 +15,17 @@ table = doc.xpath('//div[@class="ranking"]/table')
 
 csv_text = CSV.generate{|csv|
   table.search(:tr).each do |tr|
-    array = tr.search("td").map{|tag| tag.text}
+    array = tr.search("td").map{|tag| 
+      attr = tag.attributes["class"]
+      if !attr.nil?
+        if attr.text != "s1n1" and attr.text != "s3n5"
+          tag.text
+        end
+      else
+        tag.text
+      end
+    }.compact
+
     if !array[0].nil? and !array[0].include?('コピペご遠慮ください')
       csv << array
     end
