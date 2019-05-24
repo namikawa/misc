@@ -12,7 +12,7 @@ CSV.foreach('./sangokushi3_comp.csv', headers: false) do |row|
     puts "陸指: #{row[4]}"
     puts "水指: #{row[5]}"
     puts "-----"
-    puts "raw : #{row[6]},#{row[0]},#{row[1]},#{row[2]},#{row[3]},#{row[4]},#{row[5]}"
+    puts "raw : #{row[7]},#{row[6]},#{row[0]},#{row[1]},#{row[2]},#{row[3]},#{row[4]},#{row[5]}"
 
     res = true
     break
