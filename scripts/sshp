@@ -2,7 +2,7 @@
 
 HOST=$1
 CHECK=~/bin/ip_check.sh
-RESOLV="gk2"
+RESOLV="gk3"
 source ~/.ssh/pass.conf
 
 ${CHECK} ${HOST} > /dev/null
