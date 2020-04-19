@@ -20,7 +20,7 @@ pip-review --auto
 #echo "------------------------------ pip install -U *** ------------------------------"
 #pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs pip install -U
 
-echo "------------------------------ gem update ------------------------------"
+echo "------------------------------ sudo gem update ------------------------------"
 sudo gem update
 
 echo "============================"
