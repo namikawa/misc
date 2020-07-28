@@ -3,8 +3,9 @@
 # Usage:
 # ./tcpping.sh {HOST} {PORT}
 
+###
 INTERVAL=1
-##
+###
 
 seq=1
 
