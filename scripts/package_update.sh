@@ -27,6 +27,9 @@ echo "============================"
 echo "==========  INFO  =========="
 echo "============================"
 
+echo "------------------------------ brew cask upgrade --dry-run `brew cask list` ------------------------------"
+brew cask upgrade --dry-run `brew cask list`
+
 echo "------------------------------ brew cleanup --dry-run ------------------------------"
 brew cleanup --dry-run
 
