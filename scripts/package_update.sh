@@ -18,7 +18,7 @@ pip install --upgrade pip
 #echo "------------------------------ pip-review --auto ------------------------------"
 #pip-review --auto
 echo "------------------------------ pip install -U *** ------------------------------"
-pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs pip install -U --use-feature=2020-resolver
+pip freeze --local | grep -v '^\-e' | cut -d = -f 1 | xargs pip install -U
 
 echo "------------------------------ sudo gem update ------------------------------"
 sudo gem update
