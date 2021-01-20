@@ -11,6 +11,7 @@ brew update
 
 echo "------------------------------ brew upgrade ------------------------------"
 brew upgrade
+#brew upgrade --greedy
 
 echo "------------------------------ pip install --upgrade pip ------------------------------"
 pip install --upgrade pip
